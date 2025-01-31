@@ -15,12 +15,23 @@ class ChatGPTController {
                     error: "userId and messageContent are required in the request body.",
                 });
             }
+            const prompt_text = await ChatGPTService.getPrompt(userId);
+            // console.log("prompt", prompt_text[0].prompt_text);
+            const addContent = prompt_text[0].prompt_text;
+            let newContent = " ";
+            if(addContent != undefined)
+            {
+                newContent = addContent.concat(". ", messageContent);
+                console.log(newContent);
+            }
+            
+           
 
             // Make API call to ChatGPT
             const response = await axios.post(
                 process.env.CHATGPT_URL,
                 {
-                    messages: [{ role: "user", content: messageContent }],
+                    messages: [{ role: "user", content: newContent }],
                     model: "openai/gpt-3.5-turbo",
                 },
                 {
